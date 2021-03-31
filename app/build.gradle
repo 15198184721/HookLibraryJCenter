@@ -41,4 +41,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // lib_chat_hook 生成的库在jcenter上传的库。导入测试
+    implementation 'cn.lk.hook:lib_chat_hook:1.0.0'
 }

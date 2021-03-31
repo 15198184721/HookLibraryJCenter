@@ -58,7 +58,7 @@ group = properties.getProperty("bintray.group")
 // 版本号，下次更新是只需要更改版本号即可
 version = properties.getProperty("bintray.version")
 //上面配置后上传至JCenter后的编译路径是这样的：
-// compile 'cn.lk.android.hook:Hook:1.0.0'
+// compile 'cn.lk.hook:SandHook:1.0.0'
 
 //生成源文件
 task sourcesJar(type: Jar) {
@@ -112,7 +112,7 @@ bintray {
     configurations = ['archives']
     pkg {
         //这里的repo值必须要和你创建Maven仓库的时候的名字一样
-        repo = properties.getProperty("bintray.bintray.repo")
+        repo = properties.getProperty("bintray.repo")
         //发布到JCenter上的项目名字
         name = libName
         //项目描述
