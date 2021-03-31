@@ -1,2 +1,2 @@
 # HookLibraryJCenter
-上传到jcenter的一个hook库
+上传到jcenter的一个hook库,主要是对第三方的库转调部分功能。包装了部分功能,目前只是做了方法的hook转调
