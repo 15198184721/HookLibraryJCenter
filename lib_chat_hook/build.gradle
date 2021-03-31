@@ -42,21 +42,21 @@ dependencies {
     implementation 'com.swift.sandhook:xposedcompat:4.2.1'
 }
 
-//上传到JCenter
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//上传到JCenter的其他配置
+Properties config = new Properties()
+config.load(project.rootProject.file('config.properties').newDataInputStream())
 
 //项目主页
 def siteUrl = 'https://github.com/15198184721/HookLibraryJCenter.git'
 //项目的git地址
 def gitUrl = 'https://github.com/15198184721/HookLibraryJCenter.git'
 //发布到JCenter上的项目名字
-def libName = properties.getProperty("bintray.libName")
+def libName = config.getProperty("bintray.libName")
 
 //发布到组织名称名字，必须填写
-group = properties.getProperty("bintray.group")
+group = config.getProperty("bintray.group")
 // 版本号，下次更新是只需要更改版本号即可
-version = properties.getProperty("bintray.version")
+version = config.getProperty("bintray.version")
 //上面配置后上传至JCenter后的编译路径是这样的：
 // compile 'cn.lk.hook:SandHook:1.0.0'
 
@@ -91,9 +91,9 @@ install {
                 developers {
                     developer {
                         //开发者的个人信息
-                        id properties.getProperty("bintray.id")
-                        name properties.getProperty("bintray.name")
-                        email properties.getProperty("bintray.email")
+                        id config.getProperty("bintray.id")
+                        name config.getProperty("bintray.name")
+                        email config.getProperty("bintray.email")
                     }
                 }
                 scm {
@@ -106,13 +106,17 @@ install {
     }
 }
 
+//上传到JCenter用户配置
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 bintray {
     user = properties.getProperty("bintray.user")    //读取 local.properties 文件里面的 bintray.user
     key = properties.getProperty("bintray.apikey")   //读取 local.properties 文件里面的 bintray.apikey
     configurations = ['archives']
     pkg {
         //这里的repo值必须要和你创建Maven仓库的时候的名字一样
-        repo = properties.getProperty("bintray.repo")
+        repo = config.getProperty("bintray.repo")
         //发布到JCenter上的项目名字
         name = libName
         //项目描述
