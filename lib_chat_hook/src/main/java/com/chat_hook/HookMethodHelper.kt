@@ -22,7 +22,7 @@ object HookMethodHelper {
      * 初始化操作
      * @param context Context
      */
-    fun init(context:Context){
+    fun init(context: Context) {
         if (Build.VERSION.SDK_INT == 29 && getPreviewSDKInt() > 0) {
             // Android R preview
             SandHookConfig.SDK_INT = 30
@@ -55,7 +55,7 @@ object HookMethodHelper {
         XposedCompat.cacheDir = context.cacheDir
         XposedCompat.context = context
         XposedCompat.classLoader = context.classLoader
-        XposedCompat.isFirstApplication= true
+        XposedCompat.isFirstApplication = true
     }
 
     /**
@@ -64,14 +64,16 @@ object HookMethodHelper {
      */
     fun addHookMethod(hookParams: HookMethodParams) {
         try {
-            XposedHelpers.findAndHookMethod(hookParams.hookClass, hookParams.hookMethodName, object : XC_MethodHook() {
+            val hookCall = object : XC_MethodHook() {
                 @Throws(Throwable::class)
                 override fun beforeHookedMethod(param: MethodHookParam) {
                     super.beforeHookedMethod(param)
                     try {
-                        hookParams.hookCallBack.beforeHookedMethod(HookMethodCallParams(param))
-                    }catch (e:Exception){
-                        if(BuildConfig.DEBUG){
+                        hookParams.callback.beforeHookedMethod(
+                            HookMethodCallParams(param)
+                        )
+                    } catch (e: Exception) {
+                        if (BuildConfig.DEBUG) {
                             throw e //调试模式。抛出异常
                         }
                     }
@@ -81,17 +83,37 @@ object HookMethodHelper {
                 override fun afterHookedMethod(param: MethodHookParam) {
                     super.afterHookedMethod(param)
                     try {
-                        hookParams.hookCallBack.afterHookedMethod(HookMethodCallParams(param))
-                    }catch (e:Exception){
-                        if(BuildConfig.DEBUG){
+                        hookParams.callback.afterHookedMethod(
+                            HookMethodCallParams(param)
+                        )
+                    } catch (e: Exception) {
+                        if (BuildConfig.DEBUG) {
                             throw e //调试模式。抛出异常
                         }
                     }
                 }
-            })
-        }catch (e:Exception){
+            }
+            if (hookParams.paramType == null || hookParams.paramType.isEmpty()) {
+                XposedHelpers.findAndHookMethod(
+                    hookParams.hookClass,
+                    hookParams.hookMethodName,
+                    hookCall
+                )
+            } else {
+                val paramsTypeAndCall = mutableListOf<Any>()
+                //加入参数
+                paramsTypeAndCall.addAll(hookParams.paramType)
+                //加入回调
+                paramsTypeAndCall.add(hookCall)
+                XposedHelpers.findAndHookMethod(
+                    hookParams.hookClass,
+                    hookParams.hookMethodName,
+                    *paramsTypeAndCall.toTypedArray()
+                )
+            }
+        } catch (e: Exception) {
             print("添加Hook拦截出现异常:$e")
-        }catch (err:Error){
+        } catch (err: Error) {
             print("添加Hook拦截出现错误:$err")
         }
     }
@@ -100,8 +122,8 @@ object HookMethodHelper {
      * 打印日志
      * @param msg String
      */
-    internal fun print(msg:String){
-        Log.e(TAG,msg)
+    internal fun print(msg: String) {
+        Log.e(TAG, msg)
     }
 
     private fun getPreviewSDKInt(): Int {
