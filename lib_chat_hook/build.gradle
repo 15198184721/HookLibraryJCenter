@@ -37,7 +37,13 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'com.swift.sandhook:hooklib:4.2.1'
+    //导入HOOK的注解库(注解库暴露给外部)
+    api 'com.swift.sandhook:hookannotation:4.2.1'
+    //导入hook的实际控制库。因为需要暴露注解屏蔽库。所以排除了注解模块
+    implementation('com.swift.sandhook:hooklib:4.2.1') {
+        exclude module: 'hookannotation'
+    }
+//    implementation 'com.swift.sandhook:hooklib:4.2.1'
     // 不使用 Xposed API 则不需要引入
     implementation 'com.swift.sandhook:xposedcompat:4.2.1'
 }

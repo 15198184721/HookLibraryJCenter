@@ -6,6 +6,8 @@ import java.lang.reflect.Method
 
 /**
  * 转调的参数，就是当hook发生时候。回调的参数
+ * 注:
+ * 这种方式没有办法实现不调用原方法,只能做到对结果和参数进行干预
  */
 class HookMethodCallParams(
     /** 依赖的原始参数，此处是实际的参数 */
@@ -28,6 +30,7 @@ class HookMethodCallParams(
 
     /** Returns the [Throwable] thrown by the method, or `null`.  */
     fun getThrowable(): Throwable? {
+        oldParams.method =
         return oldParams.throwable
     }
 
