@@ -35,25 +35,12 @@ object HookMethodHelper {
         SandHook.tryDisableProfile(context.packageName)
         //不设置的话。这可能会崩溃
         SandHook.disableDex2oatInline(false)
+        //取消对内联hook方法的调用程序的优化,需要 >= 7.0
+//        SandHook.deCompileMethod()
 
         if (SandHookConfig.SDK_INT >= Build.VERSION_CODES.P) {
             SandHook.passApiCheck()
         }
-
-        //通过注解的方式hook
-//        try {
-//            SandHook.addHookClass(
-//                JniHooker::class.java,
-//                CtrHook::class.java,
-//                LogHooker::class.java,
-//                CustmizeHooker::class.java,
-//                ActivityHooker::class.java,
-//                ObjectHooker::class.java,
-//                NewAnnotationApiHooker::class.java
-//            )
-//        } catch (e: HookErrorException) {
-//            e.printStackTrace()
-//        }
 
         //setup for xposed
         XposedCompat.cacheDir = context.cacheDir

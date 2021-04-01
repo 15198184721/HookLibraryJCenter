@@ -10,5 +10,6 @@ import com.chat_hook.HookMethodParams
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+        HookMethodHelper.init(this)
     }
 }
