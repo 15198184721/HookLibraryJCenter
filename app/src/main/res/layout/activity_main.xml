@@ -7,10 +7,18 @@
     tools:context="com.test.MainActivity"
     tools:ignore="MissingConstraints">
 
+    <ImageView
+        android:id="@+id/iv_test"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher"/>
+
     <Button
         android:id="@+id/test_hook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="测试hook" />
+        android:text="测试hook"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_test"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

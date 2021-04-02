@@ -1,14 +1,22 @@
 package com.test
 
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import com.chat_hook.*
 import com.lk.hook.R
 import com.test.hooker.ActivityHookder
 
 class MainActivity : AppCompatActivity() {
+
+    val iv:ImageView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,4 +70,5 @@ class MainActivity : AppCompatActivity() {
     fun testHook() {
         Log.e("this", "执行方法。ScandHook方式的hook。这是目标方法 ---> testHook()")
     }
+
 }

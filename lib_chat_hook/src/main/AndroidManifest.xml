@@ -2,4 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chat_hook">
 
+    <application>
+
+        <!-- 实现自动初始化 -->
+        <provider
+            android:authorities="${applicationId}.providers.HkInitProvider"
+            android:exported="false"
+            android:enabled="true"
+            android:name=".providers.HkInitProvider" />
+
+    </application>
+
+
+
+
 </manifest>
