@@ -16,7 +16,9 @@ implementation 'cn.lk.hook:lib_chat_hook:1.0.1'
 上传到jcenter的一个hook库,主要是对第三方的库转调部分功能。包装了部分功能,目前只是做了方法的hook转调
 使用方法:
 ```kotlin
-    HookMethodHelper.init() //初始化
+    @Deprecated("已经被废弃,此初始化不在是必须的操作。已经在其他地方自动初始化")
+    HookMethodHelper.init() //初始化(已经废弃。可以不初始化,会自动初始化)
+
     HookMethodHelper.addHookMethod() //添加方法的hook指定方法
     HookMethodHelper.addHookConstructorMethod() //hook构造方法
     HookMethodHelper.addHookMethodClass() //通过原始方式进行hook添加
