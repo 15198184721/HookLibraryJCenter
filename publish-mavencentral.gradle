@@ -1,8 +1,8 @@
 // 配置方式：将此配置加入到Model的gradle配置文件末尾即可
 //ext {
 //    PUBLISH_GROUP_ID = "io.github.15198184721"  //申请的mven的GroupId
-//    PUBLISH_ARTIFACT_ID = 'AndroidSandHook'     //项目名
-//    PUBLISH_VERSION = android.defaultConfig.versionName  //版本号
+//    PUBLISH_ARTIFACT_ID = 'AndroidSandHook'     //项目名,可以理解为除了GroupId之外的二级引用,一般为model名称
+//    PUBLISH_VERSION = android.defaultConfig.versionName  //版本号(直接引用了Model的版本号名称)
 //}
 //
 //apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
