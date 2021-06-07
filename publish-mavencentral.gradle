@@ -1,3 +1,12 @@
+// 配置方式：将此配置加入到Model的gradle配置文件末尾即可
+//ext {
+//    PUBLISH_GROUP_ID = "io.github.15198184721"  //申请的mven的GroupId
+//    PUBLISH_ARTIFACT_ID = 'AndroidSandHook'     //项目名
+//    PUBLISH_VERSION = android.defaultConfig.versionName  //版本号
+//}
+//
+//apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
+
 buildscript {
     ext {
         kotlin_version = "1.4.31"
@@ -31,11 +40,6 @@ task androidSourcesJar(type: Jar) {
 //ext["signing.secretKeyRingFile"] = ''
 //ext["ossrhUsername"] = ''
 //ext["ossrhPassword"] = ''
-
-//包名相关的在Model的gradle中进行了配置
-//PUBLISH_GROUP_ID = "cn.lk.hook"             //项目包名
-//PUBLISH_ARTIFACT_ID = 'AndroidSandHook'     //项目名
-//PUBLISH_VERSION = '0.0.1'
 
 File secretPropsFile = project.rootProject.file('config.properties')
 if (secretPropsFile.exists()) {
