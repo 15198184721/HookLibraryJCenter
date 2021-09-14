@@ -95,3 +95,9 @@ class ActivityHookder {
 此库基于[SandHook](https://github.com/ganyao114/SandHook)
 但为了出现兼容问题好处理进行了部分暴露处理，让后期出现兼容问题能够及时抽离。只是自己内部使用
 
+原库增加了一个如下库,具体作用暂时未知。后续再更新，因为此库需要 OS >= 11
+```
+// need for android 11
+implementation 'com.swift.sandhook:nativehook:4.2.0'
+```
+
