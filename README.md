@@ -10,7 +10,7 @@
 //1.0.1 尽量需替换为最新版(jcenter，目前已废弃)
 implementation 'cn.lk.hook:lib_chat_hook:1.0.1'
 //1.0 已提交maven
-implementation 'cn.lk.hook:lib_chat_hook:1.0'
+implementation 'io.github.15198184721:AndroidSandHook:1.0'
 ```
 
 ## HookLibraryJCenter
