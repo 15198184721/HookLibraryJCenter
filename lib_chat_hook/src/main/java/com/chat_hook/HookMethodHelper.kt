@@ -3,16 +3,11 @@ package com.chat_hook
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import com.swift.sandhook.HookLog
-import com.swift.sandhook.SandHook
-import com.swift.sandhook.SandHookConfig
-import com.swift.sandhook.annotation.HookMethod
-import com.swift.sandhook.annotation.HookMethodBackup
-import com.swift.sandhook.xposedcompat.XposedCompat
-import com.swift.sandhook.xposedcompat.utils.DexLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedHelpers
+import top.canyie.pine.PineConfig
+import top.canyie.pine.enhances.PineEnhances
 import java.lang.reflect.Method
 import java.util.*
 
@@ -23,11 +18,25 @@ import java.util.*
  */
 object HookMethodHelper {
 
+    //是否debug
+    var IS_DEBUG = false
+
     const val TAG = "hook"
     private var isInit = false
 
     //未执行的一些任务，就是堆积的任务。这个是在未初始化之前请求执行的任务
-    private val notInitTaskList:MutableList<()->Unit> = Collections.synchronizedList(mutableListOf())
+    private val notInitTaskList: MutableList<() -> Unit> =
+        Collections.synchronizedList(mutableListOf())
+
+    /**
+     * 初始化操作,自动初始化。不需要外部手动调用了
+     * @param context Context
+     */
+    @Synchronized
+    internal fun init(context: Context) {
+        IS_DEBUG = false
+        init(context, IS_DEBUG)
+    }
 
     /**
      * 添加一个构造方法的Hook，此只对构造方法生效(XSposed方式hook)
@@ -67,7 +76,6 @@ object HookMethodHelper {
      * 添加一个普通方法的Hook(Xsposed方式hook)
      * @param hookParams HookMethodParams
      */
-    @HookMethod
     fun addHookMethod(hookParams: HookMethodParams) {
         notInitTaskList.add {
             try {
@@ -119,8 +127,9 @@ object HookMethodHelper {
      *  }
      * @param hookClass 处理这些hook的class
      */
+    @Deprecated("此方法已废弃。请通过 addHookMethod() 方式添加")
     fun addHookMethodClass(vararg hookClass: Class<*>) {
-        addHookMethodClass(null, *hookClass)
+//        addHookMethodClass(null, *hookClass)
     }
 
     /**
@@ -128,17 +137,18 @@ object HookMethodHelper {
      * @param classLoader 类加载器
      * @param hookClass 处理hook的类的class
      */
+    @Deprecated("此方法已废弃。请通过 addHookMethod() 方式添加")
     fun addHookMethodClass(classLoader: ClassLoader?, vararg hookClass: Class<*>) {
-        notInitTaskList.add {
-            try {
-                SandHook.addHookClass(classLoader, *hookClass)
-            } catch (e: Exception) {
-                print("SandHook方式添加hook异常:$e")
-            } catch (err: Error) {
-                print("SandHook方式添加hook错误:$err")
-            }
-        }
-        runCacheTask()
+//        notInitTaskList.add {
+//            try {
+//                SandHook.addHookClass(classLoader, *hookClass)
+//            } catch (e: Exception) {
+//                print("SandHook方式添加hook异常:$e")
+//            } catch (err: Error) {
+//                print("SandHook方式添加hook错误:$err")
+//            }
+//        }
+//        runCacheTask()
     }
 
     /**
@@ -152,7 +162,8 @@ object HookMethodHelper {
     fun callOriginByBackup(originMethod: Method?, thizObj: Any?, vararg params: Any?) {
         notInitTaskList.add {
             try {
-                SandHook.callOriginByBackup(originMethod, thizObj, *params)
+                XposedHelpers.callMethod(thizObj, originMethod?.name, *params)
+//                SandHook.callOriginByBackup(originMethod, thizObj, *params)
             } catch (e: Exception) {
                 print("SandHook方式添加调用原方法异常:$e")
             } catch (err: Error) {
@@ -163,16 +174,15 @@ object HookMethodHelper {
     }
 
 
-
     /**
      * 执行已经缓存的任务，这个是为了防止在未初始化之前调用了任务
      */
     @Synchronized
-    private fun runCacheTask(){
-        if(!isInit){
+    private fun runCacheTask() {
+        if (!isInit) {
             return //还未初始化
         }
-        if(notInitTaskList.isNotEmpty()){
+        if (notInitTaskList.isNotEmpty()) {
             for (function in notInitTaskList) {
                 function.invoke()
             }
@@ -184,36 +194,45 @@ object HookMethodHelper {
     /**
      * 初始化操作,自动初始化。不需要外部手动调用了
      * @param context Context
+     * @param isDebug 是否为debug环境
      */
     @Synchronized
-    internal fun init(context: Context) {
-        if(isInit){
+    internal fun init(context: Context, isDebug: Boolean) {
+        IS_DEBUG = isDebug
+        if (isInit) {
             return
         }
-        if (Build.VERSION.SDK_INT == 29 && getPreviewSDKInt() > 0) {
-            // Android R preview
-            SandHookConfig.SDK_INT = 30
-        }
-        SandHook.disableVMInline()
-        SandHook.tryDisableProfile(context.packageName)
-        //不设置的话。这可能会崩溃
-        SandHook.disableDex2oatInline(false)
-        //取消对内联hook方法的调用程序的优化,需要 >= 7.0
-//        SandHook.deCompileMethod()
+//        if (Build.VERSION.SDK_INT == 29 && getPreviewSDKInt() > 0) {
+//            // Android R preview
+//            SandHookConfig.SDK_INT = 30
+//        }
+//        SandHook.disableVMInline()
+//        SandHook.tryDisableProfile(context.packageName)
+//        //不设置的话。这可能会崩溃
+//        SandHook.disableDex2oatInline(false)
+//        //取消对内联hook方法的调用程序的优化,需要 >= 7.0
+////        SandHook.deCompileMethod()
+//
+//        if (SandHookConfig.SDK_INT >= Build.VERSION_CODES.P) {
+//            SandHook.passApiCheck()
+//        }
+//
+//        //setup for xposed
+//        XposedCompat.cacheDir = context.cacheDir
+//        XposedCompat.context = context
+//        XposedCompat.classLoader = context.classLoader
+//        XposedCompat.isFirstApplication = true
+//
+//        //是否为debug模式。表示是否输出相关日志
+//        HookLog.DEBUG = false
+//        DexLog.DEBUG = false
 
-        if (SandHookConfig.SDK_INT >= Build.VERSION_CODES.P) {
-            SandHook.passApiCheck()
-        }
+        //基础配置
+        PineConfig.debug = BuildConfig.DEBUG // 是否debug，true会输出较详细log
+        PineConfig.debuggable = BuildConfig.DEBUG // 该应用是否可调试，建议和配置文件中的值保持一致，否则会出现问题
 
-        //setup for xposed
-        XposedCompat.cacheDir = context.cacheDir
-        XposedCompat.context = context
-        XposedCompat.classLoader = context.classLoader
-        XposedCompat.isFirstApplication = true
-
-        //是否为debug模式。表示是否输出相关日志
-        HookLog.DEBUG = false
-        DexLog.DEBUG = false
+        //增强配置
+        PineEnhances.enableDelayHook()
 
         //初始化
         isInit = true
@@ -240,7 +259,7 @@ object HookMethodHelper {
                     return try {
                         hookParams.callback.replaceHookedMethod(HookMethodCallParams(param!!))
                     } catch (e: Exception) {
-                        if (BuildConfig.DEBUG) {
+                        if (IS_DEBUG) {
                             throw e //调试模式。抛出异常
                         }
                         null
@@ -257,7 +276,7 @@ object HookMethodHelper {
                             HookMethodCallParams(param)
                         )
                     } catch (e: Exception) {
-                        if (BuildConfig.DEBUG) {
+                        if (IS_DEBUG) {
                             throw e //调试模式。抛出异常
                         }
                     }
@@ -271,7 +290,7 @@ object HookMethodHelper {
                             HookMethodCallParams(param)
                         )
                     } catch (e: Exception) {
-                        if (BuildConfig.DEBUG) {
+                        if (IS_DEBUG) {
                             throw e //调试模式。抛出异常
                         }
                     }

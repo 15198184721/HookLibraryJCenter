@@ -11,7 +11,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -34,20 +34,34 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    //第一版本(由于不支持Android12，并且作者暂未给出解决方案。使用新的库替换掉)
     //导入HOOK的注解库(注解库暴露给外部)
-    api 'com.swift.sandhook:hookannotation:4.2.1'
+//    api 'com.swift.sandhook:hookannotation:4.2.1'
     //导入hook的实际控制库。因为需要暴露注解屏蔽库。所以排除了注解模块
-    implementation('com.swift.sandhook:hooklib:4.2.1') {
-        exclude module: 'hookannotation'
-    }
+//    implementation('com.swift.sandhook:hooklib:4.2.1') {
+//        exclude module: 'hookannotation'
+//    }
 //    implementation 'com.swift.sandhook:hooklib:4.2.1'
     // 不使用 Xposed API 则不需要引入
-    implementation 'com.swift.sandhook:xposedcompat:4.2.1'
+//    implementation 'com.swift.sandhook:xposedcompat:4.2.1'
+
+    // 新增替换：2022.04.26
+    // 尝试替换新的Hook框架，参考地址：https://github.com/canyie/pine
+    // 基础hook功能
+    implementation 'top.canyie.pine:core:0.2.6'
+    // 支持xposed功能
+    implementation 'top.canyie.pine:xposed:0.0.9'
+    // 增强型。可以允许hook静态方法不需要初始化类
+    // Delay hook (也称为pending hook), hook静态方法无需立刻初始化它所在的类，只需要加入以下代码:
+    // PineEnhances.enableDelayHook();
+    implementation 'top.canyie.pine:enhances:0.0.2'
+
 }
 
 ext {
-    PUBLISH_GROUP_ID = "io.github.15198184721"  //申请的mven的GroupId
-    PUBLISH_ARTIFACT_ID = 'AndroidSandHook'     //项目名
+    PUBLISH_GROUP_ID = "com.donews.lk"  //申请的mven的GroupId
+    PUBLISH_ARTIFACT_ID = 'AndroidHook'     //项目名
     PUBLISH_VERSION = android.defaultConfig.versionName  //版本号
 }
 

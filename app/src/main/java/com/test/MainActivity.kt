@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import com.chat_hook.*
 import com.lk.hook.R
-import com.test.hooker.ActivityHookder
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //原始方式hook
-        HookMethodHelper.addHookMethodClass(ActivityHookder::class.java)
+//        HookMethodHelper.addHookMethodClass(ActivityHookder::class.java)
         //Xspcoe方式
         //以修改参数方式进行。此方法无论如何都会调用原方法。但是可以通过修改参数和结果来干预其运行流程
 //        HookMethodHelper.addHookMethod(

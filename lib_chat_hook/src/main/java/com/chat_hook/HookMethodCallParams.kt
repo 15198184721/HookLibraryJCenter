@@ -1,6 +1,9 @@
 package com.chat_hook
 
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedHelpers
+import java.lang.Exception
+import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 
@@ -31,7 +34,7 @@ class HookMethodCallParams(
     /** Returns the [Throwable] thrown by the method, or `null`.  */
     fun getThrowable(): Throwable? {
         oldParams.method =
-        return oldParams.throwable
+            return oldParams.throwable
     }
 
     /** Returns true if an exception was thrown by the method.  */
@@ -63,11 +66,22 @@ class HookMethodCallParams(
         return oldParams.thisObject
     }
 
-    fun getArges():Array<Any?>?{
+    fun getArges(): Array<Any?>? {
         return oldParams.args
     }
 
-    fun getReturnEarly():Boolean{
-        return oldParams.returnEarly
+    /**
+     * 是否已经返回内容
+     * @return T:已返回，F:未返回
+     */
+    fun getReturnEarly(): Boolean {
+        return try {
+            val fieldName = "oldParams"
+            XposedHelpers.getBooleanField(oldParams, fieldName)
+        } catch (e: Exception) {
+            false
+        } catch (err: Error) {
+            false
+        }
     }
 }
